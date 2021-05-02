@@ -62,6 +62,8 @@ class ComposerPackageTransformer implements PackageTransformer {
 		$builder = $this->factory->create( 'composer' )->with_package( $package );
 
 		$vendor = apply_filters( 'satispress_vendor', 'satispress' );
+		$vendor = $vendor. '-' .  $package->get_type();
+
 		$name   = $this->normalize_package_name( $package->get_slug() );
 		$builder->set_name( $vendor . '/' . $name );
 

@@ -49,6 +49,13 @@ class Download implements Route {
 	const PACKAGE_VERSION_REGEX = '/[^0-9a-z.-]+/i';
 
 	/**
+	 * Regex for sanitizing package package type.
+	 *
+	 * @var string
+	 */
+	const PACKAGE_TYPE_REGEX = '/[^A-Za-z0-9._\-]+/i';
+
+	/**
 	 * Release manager.
 	 *
 	 * @var ReleaseManager
@@ -103,7 +110,12 @@ class Download implements Route {
 			$version = preg_replace( self::PACKAGE_VERSION_REGEX, '', $request['version'] );
 		}
 
-		$package = $this->repository->first_where( [ 'slug' => $slug ] );
+		$type = '';
+		if ( ! empty( $request['type'] ) ) {
+			$type = preg_replace( self::PACKAGE_TYPE_REGEX, '', $request['type'] );
+		}
+
+		$package = $this->repository->first_where( [ 'slug' => $slug, 'type' => $type ] );
 
 		// Send a 404 response if the package doesn't exist.
 		if ( ! $package instanceof Package ) {

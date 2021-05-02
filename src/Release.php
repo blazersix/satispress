@@ -62,8 +62,13 @@ class Release {
 	 * @return string
 	 */
 	public function get_download_url( array $args = [] ): string {
+
+		// un-prefix the package type
+		$package_type = str_replace( 'wordpress-', '', $this->get_package()->get_type() );
+
 		$url = sprintf(
-			'/satispress/%s/%s',
+			'/satispress/%s/%s/%s',
+			$package_type,
 			$this->get_package()->get_slug(),
 			$this->get_version()
 		);
@@ -79,11 +84,18 @@ class Release {
 	 * @return string
 	 */
 	public function get_file_path(): string {
-		return sprintf(
-			'%1$s/%2$s',
+
+		// un-prefix the package type
+		$package_type = str_replace( 'wordpress-', '', $this->get_package()->get_type() );
+
+		$path = sprintf(
+			'%1$s/%2$s/%3$s',
+			$package_type,
 			$this->get_package()->get_slug(),
 			$this->get_file()
 		);
+
+		return $path;
 	}
 
 	/**

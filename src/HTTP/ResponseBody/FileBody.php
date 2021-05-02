@@ -36,6 +36,16 @@ class FileBody implements ResponseBody {
 	 */
 	public function __construct( string $filename ) {
 		$result = validate_file( $filename );
+
+		// if windows file path is found, ignore in
+		// in case wamp or such server is used
+		if ( 2 === $result ) {
+			$result = 0;
+
+			// normalize windows file path
+			$filename = wp_normalize_path( $filename );
+		}
+
 		if ( 0 !== $result ) {
 			throw InvalidFileName::withValidationCode( $filename, $result );
 		}
