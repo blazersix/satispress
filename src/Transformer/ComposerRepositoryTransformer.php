@@ -19,6 +19,7 @@ use SatisPress\Package;
 use SatisPress\ReleaseManager;
 use SatisPress\Repository\PackageRepository;
 use SatisPress\VersionParser;
+use UnexpectedValueException;
 
 /**
  * Composer repository transformer class.
@@ -159,6 +160,15 @@ class ComposerRepositoryTransformer implements PackageRepositoryTransformer {
 			} catch ( FileNotFound $e ) {
 				$this->logger->error(
 					'Package artifact could not be found for {package}:{version}.',
+					[
+						'exception' => $e,
+						'package'   => $package->get_name(),
+						'version'   => $version,
+					]
+				);
+			} catch ( UnexpectedValueException $e ) {
+				$this->logger->error(
+					'Invalid version string for {package}:{version}.',
 					[
 						'exception' => $e,
 						'package'   => $package->get_name(),
